@@ -6,7 +6,7 @@ export default function Feature({ logo, title, description }) {
 			<img
 				src={logo}
 				alt="feature"
-				className="w-[152px] aspect-square p-[16px] rounded-full border-secondary border-[10px]"
+				className="w-[100px] md:w-[152px] aspect-square p-[16px] rounded-full border-secondary border-[5px] md:border-[10px]"
 			/>
 			<h3 className="text-xl font-bold">{title}</h3>
 			<p>{description}</p>

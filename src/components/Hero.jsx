@@ -2,9 +2,9 @@ import React from 'react'
 
 export default function Hero() {
   return (
-		<section className='w-full h-[400px] relative'>
-			<img src="/src/assets/bank-tree.jpeg" alt="" className='absolute inset-0 h-full w-full object-cover' />
-            <div className='bg-white absolute right-[50px] top-1/2 -translate-y-1/2 p-10'>
+		<section className='w-full h-auto flex items-center justify-center sm:justify-end relative'>
+			<img src="/src/assets/bank-tree.jpeg" alt="" className='absolute z-[-1] h-full w-full object-cover' />
+            <div className='w-full max-w-[364px] bg-white p-10 my-16 mx-4 sm:mx-20'>
                 <h2 className='text-2xl font-bold mb-4'>
                     No fees.
                 <br />
