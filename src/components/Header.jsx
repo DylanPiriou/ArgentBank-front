@@ -1,24 +1,39 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
-export default function Header() {
-    const [isLogged, setIsLogged] = useState(false)
-    
-  return (
-		<header className="w-full h-16 flex items-center justify-between px-4 md:px-9 mg:px-44">
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../redux/slices/authSlice";
+import { toast } from "sonner";
+
+export default function Header({ isConnected, setIsConnected, firstName }) {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const handleLogout = () => {
+		dispatch(logout());
+		navigate("/login");
+		toast.success("Vous êtes déconnecté");
+	};
+
+	return (
+		<header className="w-full flex max-sm:flex-col items-center justify-between py-4 px-4 md:px-9 mg:px-44">
 			<Link to="/" className="w-[200px]">
 				<img src="/src/assets/argentBankLogo.png" alt="ArgentBank" />
 			</Link>
-			{isLogged ? (
-				<div className='w-fit flex gap-3'>
+
+			{isConnected ? (
+				<div className="w-fit flex gap-5">
 					<Link to="/user" className="flex items-center justify-center">
 						<img src="/src/assets/icon-user.svg" alt="logo utilisateur" />
-						<p className="font-bold"> John DOE </p>
+						<p className="font-bold">{firstName}</p>
 					</Link>
-					<Link to="/" className="flex items-center justify-center">
+					<div
+						className="flex items-center justify-center cursor-pointer"
+						onClick={() => handleLogout()}
+					>
 						<img src="/src/assets/logout.svg" alt="logo utilisateur" />
 						<p className="font-bold"> Sign Out </p>
-					</Link>
+					</div>
 				</div>
 			) : (
 				<Link to="/login" className="flex items-center justify-center gap-1">
@@ -26,6 +41,7 @@ export default function Header() {
 					<p className="font-bold"> Sign In </p>
 				</Link>
 			)}
+
 		</header>
 	);
 }

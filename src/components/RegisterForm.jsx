@@ -1,19 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "./Button";
-import { login } from "../API";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import InputField from "./InputField";
+import { useDispatch } from "react-redux";
+import { createUser } from "../redux/slices/authSlice";
 
 export default function RegisterForm() {
-	const navigate = useNavigate();
 
-	const handleSubmit = async (event) => {
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	
+	const handleSave = async (event) => {
 		event.preventDefault();
 		const formData = new FormData(event.target);
-		const username = formData.get("username");
+		const firstName = formData.get("firstname");
+		const lastName = formData.get("lastname");
+		const email = formData.get("email");
 		const password = formData.get("password");
-		const remember = formData.get("remember");
 
-		console.log({ username, password, remember });
+		// Vérification que tous les champs sont remplis
+		if (!firstName || !lastName || !email || !password) {
+			toast.error("Veuillez remplir tous les champs");
+			return;
+		}
+
+		// Vérification de la longueur du nom et du prénom
+		if (firstName.trim().length < 3 || lastName.trim().length < 3) {
+			toast.error("Le nom et le prénom doivent contenir au moins 3 caractères");
+			return;
+		}
+
+		// Vérification de l'email avec un regex
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		if (!emailRegex.test(email)) {
+			toast.error("L'email n'est pas valide");
+			return;
+		}
+
+		const userData = {
+			email: email,
+			password: password,
+			firstName: firstName,
+			lastName: lastName,
+		};
+
+		try {
+			await dispatch(createUser(userData)).unwrap();
+			toast.success("Compte créé. Vous pouvez maintenant vous connecter");
+			navigate("/login");
+		} catch (err) {
+			toast.error("Échec de la création du compte, veuillez réassayer.");
+			event.target.reset();
+		}
 	};
 
 	return (
@@ -25,52 +64,32 @@ export default function RegisterForm() {
 			/>
 			<h3 className="text-xl font-bold">Register</h3>
 			<form
-				onSubmit={handleSubmit}
+				onSubmit={handleSave}
 				className="w-full flex flex-col items-left justify-center gap-2"
 			>
-				<label htmlFor="firstname" className="flex flex-col font-bold">
-					Firstname
-					<input
-						type="text"
-						id="firstname"
-						name="firstname"
-						className="border p-2"
-					/>
-				</label>
-				<label htmlFor="lastname" className="flex flex-col font-bold">
-					Lastname
-					<input
-						type="text"
-						id="lastname"
-						name="lastname"
-						className="border p-2"
-					/>
-				</label>
-				<label htmlFor="email" className="flex flex-col font-bold">
-					Email
-					<input
-						type="email"
-						id="email"
-						name="email"
-						className="border p-2"
-					/>
-				</label>
-				<label htmlFor="password" className="flex flex-col font-bold">
-					Password
-					<input
-						type="password"
-						id="password"
-						name="password"
-						className="border p-2"
-					/>
-				</label>
+				<InputField
+					label="Firtsname"
+					id="firstname"
+					type="text"
+				/>
+				<InputField
+					label="Lastname"
+					id="lastname"
+					type="text"
+				/>
+				<InputField label="Email" id="email" type="email" />
+				<InputField
+					label="Password"
+					id="password"
+					type="password"
+				/>
 				<small>
 					Have an account ? &nbsp;
 					<Link to="/login" className="text-secondary">
 						Sign in now
 					</Link>
 				</small>
-				<Button text="Sign In" full />
+				<Button text="Sign Up" full />
 			</form>
 		</div>
 	);

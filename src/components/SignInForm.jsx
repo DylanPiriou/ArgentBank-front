@@ -1,11 +1,16 @@
+// src/components/SignInForm.js
 import React from "react";
 import Button from "./Button";
 import { login } from "../API";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import InputField from "./InputField";
+import { useDispatch } from "react-redux";
+import { fetchUserProfile, setToken } from "../redux/slices/authSlice";
 
 export default function SignInForm() {
 	const navigate = useNavigate();
-
+	const dispatch = useDispatch();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -14,20 +19,20 @@ export default function SignInForm() {
 		const password = formData.get("password");
 		const remember = formData.get("remember");
 
-		console.log({ username, password, remember });
 		login(username, password)
 			.then((response) => {
 				if (response.ok) {
-					console.log("Login successful");
+					toast.success("Connexion réussie. Bienvenue !");
 					return response.json();
 				} else {
-					console.error("Login failed");
+					toast.error("La connexion a échoué. Veuillez réessayer.");
 					throw new Error("Login failed");
 				}
 			})
 			.then((data) => {
 				if (data.body.token) {
-					localStorage.setItem("token", data.body.token);
+					dispatch(setToken(data.body.token));
+					dispatch(fetchUserProfile(data.body.token));
 					navigate("/user");
 				}
 			})
@@ -48,31 +53,14 @@ export default function SignInForm() {
 				onSubmit={handleSubmit}
 				className="w-full flex flex-col items-left justify-center gap-2"
 			>
-				<label htmlFor="username" className="flex flex-col font-bold">
-					Username
-					<input
-						type="text"
-						id="username"
-						name="username"
-						className="border p-2"
-					/>
-				</label>
-				<label htmlFor="password" className="flex flex-col font-bold">
-					Password
-					<input
-						type="password"
-						id="password"
-						name="password"
-						className="border p-2"
-					/>
-				</label>
-				<label htmlFor="remember" className="flex gap-2">
-					<input type="checkbox" name="remember" id="remember" />
-					Remember Me
-				</label>
+				<InputField label="Username" type="text" id="username" required />
+				<InputField label="Password" type="password" id="password" required />
+				<InputField label="Remember Me" type="checkbox" id="checkbox" />
 				<small>
 					No account ? &nbsp;
-					<Link to="/register" className="text-secondary">Register now</Link>
+					<Link to="/register" className="text-secondary">
+						Register now
+					</Link>
 				</small>
 				<Button text="Sign In" full />
 			</form>
