@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../redux/slices/authSlice";
 import { toast } from "sonner";
+import { fetchUser, logoutUser } from "../redux/actions/userActions";
+import { useEffect } from "react";
 
-export default function Header({ isConnected, setIsConnected, firstName }) {
+export default function Header() {
+	
+	// On récupère les infos du store
+	const { user, token, isConnected } = useSelector((state) => state.user);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (token) {
+			dispatch(fetchUser());
+		}
+	}, [dispatch, token]);
+
 	const handleLogout = () => {
-		dispatch(logout());
+		dispatch(logoutUser());
 		navigate("/login");
-		toast.success("Vous êtes déconnecté");
+		toast.success("Vous êtes déconnecté.");
 	};
 
 	return (
@@ -23,9 +32,9 @@ export default function Header({ isConnected, setIsConnected, firstName }) {
 
 			{isConnected ? (
 				<div className="w-fit flex gap-5">
-					<Link to="/user" className="flex items-center justify-center">
+					<Link to="/profile" className="flex items-center justify-center">
 						<img src="/src/assets/icon-user.svg" alt="logo utilisateur" />
-						<p className="font-bold">{firstName}</p>
+						<p className="font-bold">{user.firstName}</p>
 					</Link>
 					<div
 						className="flex items-center justify-center cursor-pointer"
@@ -41,7 +50,6 @@ export default function Header({ isConnected, setIsConnected, firstName }) {
 					<p className="font-bold"> Sign In </p>
 				</Link>
 			)}
-
 		</header>
 	);
 }

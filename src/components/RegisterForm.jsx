@@ -1,18 +1,18 @@
-import React, { useState } from "react";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import InputField from "./InputField";
 import { useDispatch } from "react-redux";
-import { createUser } from "../redux/slices/authSlice";
+import { createUser } from "../redux/actions/userActions";
 
 export default function RegisterForm() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	
-	const handleSave = async (event) => {
+	const handleSave = (event) => {
 		event.preventDefault();
+
 		const formData = new FormData(event.target);
 		const firstName = formData.get("firstname");
 		const lastName = formData.get("lastname");
@@ -46,11 +46,11 @@ export default function RegisterForm() {
 		};
 
 		try {
-			await dispatch(createUser(userData)).unwrap();
-			toast.success("Compte créé. Vous pouvez maintenant vous connecter");
+			dispatch(createUser(userData));
+			toast.success("Compte créé. Vous pouvez maintenant vous connecter.");
 			navigate("/login");
 		} catch (err) {
-			toast.error("Échec de la création du compte, veuillez réassayer.");
+			toast.error("Échec de la création du compte, veuillez réessayer.");
 			event.target.reset();
 		}
 	};

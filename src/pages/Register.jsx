@@ -1,8 +1,22 @@
+import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import RegisterForm from "../components/RegisterForm";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Register() {
+
+	// On récupère les infos du store
+	const { isConnected } = useSelector((state) => state.user);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (isConnected) {
+			navigate("/profile");
+		}
+	}, [isConnected, navigate]);
+
 	return (
 		<div className="flex flex-col h-full min-h-[100vh]">
 			<Header />

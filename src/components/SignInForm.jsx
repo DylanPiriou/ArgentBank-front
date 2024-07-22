@@ -1,44 +1,39 @@
-// src/components/SignInForm.js
-import React from "react";
 import Button from "./Button";
-import { login } from "../API";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import InputField from "./InputField";
 import { useDispatch } from "react-redux";
-import { fetchUserProfile, setToken } from "../redux/slices/authSlice";
+import { loginAction } from "../redux/actions/userActions";
 
 export default function SignInForm() {
+
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	// useEffect(() => {
+	// 	if (token) {
+	// 		dispatch(fetchUser());
+	// 	}
+	// }, [dispatch, token]);
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+
 		const formData = new FormData(event.target);
 		const username = formData.get("username");
 		const password = formData.get("password");
-		const remember = formData.get("remember");
+		// const remember = formData.get("remember");
 
-		login(username, password)
-			.then((response) => {
-				if (response.ok) {
-					toast.success("Connexion réussie. Bienvenue !");
-					return response.json();
-				} else {
-					toast.error("La connexion a échoué. Veuillez réessayer.");
-					throw new Error("Login failed");
-				}
-			})
-			.then((data) => {
-				if (data.body.token) {
-					dispatch(setToken(data.body.token));
-					dispatch(fetchUserProfile(data.body.token));
-					navigate("/user");
-				}
-			})
-			.catch((error) => {
-				console.error("Error:", error);
-			});
+		// Appel de l'action pour se connecter
+		dispatch(loginAction(username, password))
+		.then(() => {
+			toast.success("Connexion réussie. Bienvenue !");
+			navigate("/profile");
+		})
+		.catch(() => {
+			toast.error("La connexion a échoué. Veuillez réessayer.");
+		})
+		;
 	};
 
 	return (
