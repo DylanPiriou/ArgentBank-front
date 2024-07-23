@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { fetchUser, logoutUser } from "../redux/actions/userActions";
