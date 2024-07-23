@@ -8,7 +8,7 @@ export const loginAction = (email, password) => async (dispatch) => {
 		window.localStorage.setItem("token", data.body.token);
 		dispatch({ type: "LOGIN_SUCCESS", payload: data });
 	} catch (error) {
-		dispatch({ type: "LOGIN_FAILURE", error });
+		dispatch({ type: "LOGIN_FAILURE" });
 	}
 };
 
@@ -21,8 +21,8 @@ export const fetchUser = () => {
 				.then((data) => {
 					dispatch({ type: "FETCH_USER_SUCCESS", payload: data });
 				})
-				.catch((error) => {
-					dispatch({ type: "FETCH_USER_FAILURE", payload: error });
+				.catch(() => {
+					dispatch({ type: "FETCH_USER_FAILURE" });
 				});
 		}
 	};
@@ -37,8 +37,8 @@ export const updateUser = (userId, updatedInfo) => {
 				.then((data) => {
 					dispatch({ type: "UPDATE_USER_SUCCESS", payload: data });
 				})
-				.catch((error) => {
-					dispatch({ type: "UPDATE_USER_FAILURE", payload: error });
+				.catch(() => {
+					dispatch({ type: "UPDATE_USER_FAILURE" });
 				});
 		}
 	};
@@ -51,8 +51,8 @@ export const createUser = (userInfo) => {
 				.then((data) => {
 					dispatch({ type: "CREATE_USER_SUCCESS", payload: data });
 				})
-				.catch((error) => {
-					dispatch({ type: "CREATE_USER_FAILURE", payload: error });
+				.catch(() => {
+					dispatch({ type: "CREATE_USER_FAILURE" });
 				});
 	};
 };

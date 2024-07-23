@@ -13,23 +13,34 @@ export const userReducer = (state = initialState, action) => {
 				...state,
 				token: action.payload.body.token,
 				isConnected: true,
-				status: "succeeded",
+				status: "success",
 			};
 		case "LOGIN_FAILURE":
 			return {
 				...state,
-				status: "failed",
+				status: "error",
 			};
 		case "FETCH_USER_SUCCESS":
 			return {
 				...state,
 				user: action.payload.body,
-				status: "succeeded",
+				status: "success",
 			};
 		case "FETCH_USER_FAILURE":
 			return {
 				...state,
-				status: "failed",
+				status: "error",
+			};
+		case "UPDATE_USER_SUCCESS":
+			return {
+				...state,
+				user: action.payload.body,
+				status: "success",
+			};
+		case "UPDATE_USER_FAILURE":
+			return {
+				...state,
+				status: "error",
 			};
 		case "LOGOUT":
 			return {

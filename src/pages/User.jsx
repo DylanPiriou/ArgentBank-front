@@ -42,12 +42,10 @@ export default function User() {
 
 	const handleFirstNameChange = (e) => {
 		setNewFirstName(e.target.value);
-		console.log(e.target.value);
 	};
 
 	const handleLastNameChange = (e) => {
 		setNewLastName(e.target.value);
-		console.log(e.target.value);
 	};
 
 	const handleSave = () => {
@@ -66,7 +64,7 @@ export default function User() {
 			(!newFirstName || newFirstName === firstName) &&
 			(!newLastName || newLastName === lastName)
 		) {
-			toast.info("Aucune modification détectée.");
+			toast.info("Échec de la mise à jour. Aucune modification détectée.");
 			return;
 		}
 

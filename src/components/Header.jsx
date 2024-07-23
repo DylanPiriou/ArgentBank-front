@@ -21,7 +21,7 @@ export default function Header() {
 	const handleLogout = () => {
 		dispatch(logoutUser());
 		navigate("/login");
-		toast.success("Vous êtes déconnecté.");
+		toast.info("Vous êtes déconnecté.");
 	};
 
 	return (
